@@ -1,77 +1,66 @@
-Ansible Java Role
-=================
+# Ansible Role: Java
 
-[![Build Status](https://travis-ci.org/smola/ansible-java-role.svg?branch=master)](https://travis-ci.org/smola/ansible-java-role)
+[![Build Status](https://travis-ci.org/geerlingguy/ansible-role-java.svg?branch=master)](https://travis-ci.org/geerlingguy/ansible-role-java)
 
-Manages installation of Java JREs and JDKs. It supports both OpenJDK and Oracle
-JRE and JDK 6, 7 and 8. All of them are installed using the package manager.
+Installs Java for RedHat/CentOS and Debian/Ubuntu linux servers.
 
-Requirements
-------------
+## Requirements
 
 None.
 
-Role Variables
---------------
+## Role Variables
 
-The `java_packages` variable must be set to a list of the desired Java packages. For example:
+Available variables are listed below, along with default values:
 
-```yaml
-java_packages:
-  - openjdk-6-jdk
-  - oracle-java7-installer
-```
+    # The defaults provided by this role are specific to each distribution.
+    java_packages:
+      - java-1.7.0-openjdk
 
-# Debian / Ubuntu
+Set the version/development kit of Java to install, along with any other necessary Java packages. Some other options include are included in the distribution-specific files in this role's 'defaults' folder.
 
-Valid packages for Debian and Ubuntu are:
+    java_home: ""
 
-- openjdk-6-jre
-- openjdk-6-jre-headless
-- openjdk-6-jdk
-- openjdk-7-jre
-- openjdk-7-jre-headless
-- openjdk-7-jdk
-- oracle-java6-installer
-- oracle-java7-installer
-- oracle-java8-installer
+If set, the role will set the global environment variable `JAVA_HOME` to this value.
 
-32bit Java may be installed on x86 platforms appending `:i386` to the package name.
-
-You can ensure that Oracle JDK is set as the default JDK by adding `oracle-java6-set-default`, `oracle-java7-set-default` or `oracle-java6-set-default` to the `java\_packages` list.
-
-# Fedora
-
-Valid packages for Fedora are:
-
-- java-1.7.0-openjdk
-- java-1.8.0-openjdk
-
-# Others
-
-Got this role working with a different distro? Please, [report it on GitHub](http://github.com/smola/ansible-java-role/issues) or drop me a line at santi@mola.io.
-
-Dependencies
-------------
+## Dependencies
 
 None.
 
-Example Playbook
--------------------------
+## Example Playbook (using default package, usually OpenJDK 7)
 
     - hosts: servers
       roles:
-         - { role: smola.java }
+        - geerlingguy.java
 
-License
--------
+## Example Playbook (install OpenJDK 8)
 
-Copyright (c) Santiago M. Mola <santi@mola.io>
+For RHEL / CentOS:
 
-ansible-java-role is released under the terms of the MIT License.
+    - hosts: server
+      roles:
+        - role: geerlingguy.java
+          when: "ansible_os_family == 'RedHat'"
+          java_packages:
+            - java-1.8.0-openjdk
 
+For Ubuntu < 16.04:
 
-Acknowledgements
-----------------
+    - hosts: server
+      tasks:
+        - name: installing repo for Java 8 in Ubuntu
+  	      apt_repository: repo='ppa:openjdk-r/ppa'
+    
+    - hosts: server
+      roles:
+        - role: geerlingguy.java
+          when: "ansible_os_family == 'Debian'"
+          java_packages:
+            - openjdk-8-jdk
 
-Thanks to Jeff Geerling ([@geerlingguy](https://github.com/geerlingguy)) from whom I have borrowed some ideas from his [ansible-java-role](https://github.com/geerlingguy/ansible-role-java) and [Testing Ansible Roles with Travis CI on GitHub](https://servercheck.in/blog/testing-ansible-roles-travis-ci-github).
+## License
+
+MIT / BSD
+
+## Author Information
+
+This role was created in 2014 by [Jeff Geerling](https://www.jeffgeerling.com/), author of [Ansible for DevOps](https://www.ansiblefordevops.com/).
