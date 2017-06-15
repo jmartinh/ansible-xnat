@@ -18,7 +18,7 @@ postgresql_standard_conforming_strings: off # As advised by docs XXX: needed?
 # Java JVM settings
 java_home: /usr/lib/jvm/java-7-oracle/
 java_packages:
-  - oracle-java7-installer
+  - openjdk-8-jdk
 
 java_mem:
     Xms: 512
