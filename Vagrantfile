@@ -20,6 +20,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 #	ansible.verbose = 'vvvv'
 #    ansible.inventory_path = '.vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory'
     ansible.extra_vars = { ansible_ssh_user: 'ubuntu', ansible_python_interpreter: '/usr/bin/python3' }
+    ansible.verbose = 'v'
   end
 
   # Disable automatic box update checking. If you disable this, then
