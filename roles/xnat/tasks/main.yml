@@ -1,6 +1,13 @@
 ---
-- name: "Download XNAT official release tarball"
-  get_url: url=ftp://ftp.nrg.wustl.edu/pub/xnat/{{ xnat_tarball }} dest=/tmp/{{ xnat_tarball }} force=no 
+#ftp server has all downloads available but get_url module not working reliably with ftp (June 2017)
+#ftp://ftp.nrg.wustl.edu/pub/xnat/
+- name: "Download XNAT-{{ xnat.version }} SNAPSHOT .war directly to Tomcat webapps folder"
+  get_url: 
+    url=https://bitbucket.org/xnatdev/xnat-web/downloads/{{ xnat.tarball }} 
+    dest=/var/lib/tomcat{{ tomcat_version }}/webapps/ROOT.war
+    force_basic_auth=yes 
+    force=no 
+    timeout=30
 
 - name: "Add system user {{ tomcat }}"
   user: name={{ tomcat }} shell=/bin/bash # XXX: restrict shell?
