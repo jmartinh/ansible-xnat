@@ -24,7 +24,6 @@ java_mem:
     Xms: 512
     Xmx: 1024
 
-
 ## XNAT settings
 # Email server for XNAT
 smtp:
@@ -37,17 +36,21 @@ smtp:
     auth_passwd:
 
 # XNAT variables (mainly those in build.properties)
-xdat:
+xnat:
+    home_root: /data/xnat
+    archive_location: "{{ home_root }}/archive"
+    build_location: "{{ xnat.home_root }}/build"
+    prearchive_location: "{{ xnat.home_root }}/prearchive"
+    cache_location: "{{ xnat.home_root }}/cache"
+    ftp_location: "{{ xnat.home_root }}/ftp"
+    tmp_location: "{{ xnat.home_root }}/tmp"
+    pipeline_location: "{{ xnat.home_root }}/pipeline" # XXX: requires special handling
     project_name: xnat
+    version: 1.7
+    tarball: xnat-web-"{{ xnat.version }}"-SNAPSHOT.war
+
     app_src: /usr/local/xnat
     maven_appserver_home: /var/lib/tomcat{{ tomcat_version }}
-    archive_location: /srv/xnat/archive
-    prearchive_location: /srv/xnat/prearchive
-    cache_location: /srv/xnat/cache
-    ftp_location: /srv/xnat/ftp
-    build_location: /srv/xnat/tmp
-#    pipeline_location: /srv/xnat/pipelines # XXX: requires special handling
-    modules_location: /srv/xnat/modules
     main_url: http://localhost:8080/xnat
     require_login: true
     enable_new_registrations: true
