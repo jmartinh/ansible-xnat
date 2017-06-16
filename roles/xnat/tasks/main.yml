@@ -16,15 +16,9 @@
 #- name: "Download XNAT directly from GitHub"
 #  get_url: url=http://github.com/boxerab/xnat/archive/master.tar.gz dest=/tmp/{{ xnat_tarball }} force=no
 
-- name: "Unpack XNAT"
-  unarchive: src=/tmp/{{ xnat_tarball }} dest=/usr/local copy=no
-
 # only needed for github download
 #- name: "Symlink for Github xnat-master"
 #  file: src={{ xdat.app_src }}-master dest={{ xdat.app_src }} owner={{ tomcat }} group={{ tomcat }} state=link
-
-- name: "Copy build.properties"
-  template: src=build.properties.j2 dest={{ xdat.app_src }}/build.properties
 
 - name: "Copy default tomcat{{ tomcat_version }} debian file. Username change, as advised by XNAT docs"
   template: src=tomcat.j2 dest=/etc/default/tomcat{{ tomcat_version }}
@@ -44,23 +38,17 @@
 - name: "Copy setenv.sh with JAVA_HOME for tomcat{{ tomcat_version }}"
   template: src=setenv.sh dest={{ xdat.app_src }}/bin/setenv.sh 
 
-- name: "Run setup.sh"
-  shell: chdir={{ xdat.app_src }} . ./bin/setenv.sh && ./bin/setup.sh
-
 - name: "Adjust XNAT deployment permissions"
   file: path={{ xdat.app_src }} group={{ tomcat }} owner={{ tomcat }} recurse=yes
 
-- name: "Fill XNAT postgresql database with generated .sql from setup.sh"
-  command: su "{{ tomcat }}" -c "psql -f {{ xdat.app_src }}/deployments/{{ xdat.project_name }}/sql/{{ xdat.project_name }}.sql -U {{ dbuser }} {{ dbname }}"
+#- name: "Fill XNAT postgresql database with generated .sql from setup.sh"
+#  command: su "{{ tomcat }}" -c "psql -f {{ xdat.app_src }}/deployments/{{ xdat.project_name }}/sql/{{ xdat.project_name }}.sql -U {{ dbuser }} {{ dbname }}"
 
-- name: "Adjust default XNAT security settings"
-  shell: chdir={{ xdat.app_src }}/deployments/{{ xdat.project_name }} . {{ xdat.app_src }}/bin/setenv.sh {{ item }}
-  with_items:
-      - "{{ xdat.app_src }}/bin/StoreXML -project {{ xdat.project_name }} -l security/security.xml -allowDataDeletion true"
-      - "{{ xdat.app_src }}/bin/StoreXML -dir ./work/field_groups -u admin -p admin -allowDataDeletion true"
-
-- name: "Deploy XNAT to tomcat"
-  shell: chdir={{ xdat.app_src }} . ./bin/setenv.sh && ./bin/update.sh -Ddeploy=true
+#- name: "Adjust default XNAT security settings"
+#  shell: chdir={{ xdat.app_src }}/deployments/{{ xdat.project_name }} . {{ xdat.app_src }}/bin/setenv.sh {{ item }}
+#  with_items:
+#      - "{{ xdat.app_src }}/bin/StoreXML -project {{ xdat.project_name }} -l security/security.xml -allowDataDeletion true"
+#      - "{{ xdat.app_src }}/bin/StoreXML -dir ./work/field_groups -u admin -p admin -allowDataDeletion true"
 
 - name: "Adjust XNAT/tomcat permissions post-deployment and start tomcat"
   file: path={{ xdat.maven_appserver_home }} group={{ tomcat }} owner={{ tomcat }} state=directory recurse=yes
