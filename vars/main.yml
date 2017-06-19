@@ -36,17 +36,19 @@ smtp:
     auth_passwd:
 
 # XNAT variables
-xnat_home_root: /data/xnat
+xnat_root: /data/xnat
+xnat_home: "{{ xnat_root }}/home"
 xnat_project_name: xnat
 xnat_version: 1.7.1
 xnat_tarball: xnat-web-{{ xnat_version }}-SNAPSHOT.war
-xnat_archive_location: "{{ xnat_home_root }}/archive"
-xnat_build_location: "{{ xnat_home_root }}/build"
-xnat_prearchive_location: "{{ xnat_home_root }}/prearchive"
-xnat_cache_location: "{{ xnat_home_root }}/cache"
-xnat_ftp_location: "{{ xnat_home_root }}/ftp"
-xnat_tmp_location: "{{ xnat_home_root }}/tmp"
-xnat_pipeline_location: "{{ xnat_home_root }}/pipeline" # XXX: requires special handling
+
+#xnat_archive_location: "{{ xnat_root }}/archive"
+#xnat_build_location: "{{ xnat_root }}/build"
+#xnat_prearchive_location: "{{ xnat_root }}/prearchive"
+#xnat_cache_location: "{{ xnat_root }}/cache"
+#xnat_ftp_location: "{{ xnat_root }}/ftp"
+#xnat_tmp_location: "{{ xnat_root }}/tmp"
+#xnat_pipeline_location: "{{ xnat_root }}/pipeline" # XXX: requires special handling
 
 
     #app_src: /usr/local/xnat

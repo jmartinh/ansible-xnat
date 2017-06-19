@@ -1,12 +1,21 @@
 ---
 #ftp server has all downloads available but get_url module not working reliably with ftp (June 2017)
 #ftp://ftp.nrg.wustl.edu/pub/xnat/
-- name: "Download XNAT-{{ xnat_version }} snapshot .war directly to Tomcat webapps folder"
-  get_url: 
-    url=https://bitbucket.org/xnatdev/xnat-web/downloads/{{ xnat_tarball }} 
+
+#use for remote targets
+#- name: "Download XNAT-{{ xnat_version }} snapshot .war directly to Tomcat webapps folder"
+#  get_url: 
+#    url=https://bitbucket.org/xnatdev/xnat-web/downloads/{{ xnat_tarball }} 
+#    dest=/var/lib/tomcat{{ tomcat_version }}/webapps/ROOT.war
+#    force=no 
+#    timeout=30
+#    tmp_dest=/tmp
+
+#use for local targets e.g. vagrant boxes
+- name: "Copy over local {{ xnat_tarball }} to target Tomcat webapps folder"
+  copy:
+    src=~/Downloads/{{ xnat_tarball }}
     dest=/var/lib/tomcat{{ tomcat_version }}/webapps/ROOT.war
-    force=no 
-    timeout=30
 
 - name: "Add system user {{ tomcat }}"
   user: name={{ tomcat }} shell=/bin/bash # XXX: restrict shell?
@@ -24,15 +33,20 @@
   when: ansible_os_family == 'Debian'
 
 - name: "Setup XNAT data directories structure (LFH compliant)"
-  file: path={{ item }} group={{ tomcat }} owner={{ tomcat }} state=directory
+  file: path="{{ xnat_root }}/{{ item }}" group={{ tomcat }} owner={{ tomcat }} state=directory
   with_items:
-      - "{{ xnat_archive_location }}"
-      - "{{ xnat_prearchive_location }}"
-      - "{{ xnat_cache_location }}"
-      - "{{ xnat_ftp_location }}"
-      - "{{ xnat_build_location }}"
-      - "{{ xnat_modules_location }}"
-  #    - "{{ xnat.pipeline_location }}" # XXX: requires special handling
+      - build
+      - archive
+      - prearchive
+      - cache
+      - ftp
+      - pipeline
+      - home 
+      - home/config
+      - home/logs
+      - home/plugin
+      - home/work
+
 
 #- name: "Copy setenv.sh with JAVA_HOME for tomcat{{ tomcat_version }}"
 #  template: src=setenv.sh dest={{ xdat.app_src }}/bin/setenv.sh 
