@@ -1,11 +1,10 @@
 ---
 #ftp server has all downloads available but get_url module not working reliably with ftp (June 2017)
 #ftp://ftp.nrg.wustl.edu/pub/xnat/
-- name: "Download XNAT-{{ xnat.version }} SNAPSHOT .war directly to Tomcat webapps folder"
+- name: "Download XNAT-{{ xnat_version }} snapshot .war directly to Tomcat webapps folder"
   get_url: 
-    url=https://bitbucket.org/xnatdev/xnat-web/downloads/{{ xnat.tarball }} 
+    url=https://bitbucket.org/xnatdev/xnat-web/downloads/{{ xnat_tarball }} 
     dest=/var/lib/tomcat{{ tomcat_version }}/webapps/ROOT.war
-    force_basic_auth=yes 
     force=no 
     timeout=30
 
@@ -27,19 +26,19 @@
 - name: "Setup XNAT data directories structure (LFH compliant)"
   file: path={{ item }} group={{ tomcat }} owner={{ tomcat }} state=directory
   with_items:
-      - "{{ xdat.archive_location }}"
-      - "{{ xdat.prearchive_location }}"
-      - "{{ xdat.cache_location }}"
-      - "{{ xdat.ftp_location }}"
-      - "{{ xdat.build_location }}"
-      - "{{ xdat.modules_location }}"
-  #    - "{{ xdat.pipeline_location }}" # XXX: requires special handling
+      - "{{ xnat_archive_location }}"
+      - "{{ xnat_prearchive_location }}"
+      - "{{ xnat_cache_location }}"
+      - "{{ xnat_ftp_location }}"
+      - "{{ xnat_build_location }}"
+      - "{{ xnat_modules_location }}"
+  #    - "{{ xnat.pipeline_location }}" # XXX: requires special handling
 
-- name: "Copy setenv.sh with JAVA_HOME for tomcat{{ tomcat_version }}"
-  template: src=setenv.sh dest={{ xdat.app_src }}/bin/setenv.sh 
+#- name: "Copy setenv.sh with JAVA_HOME for tomcat{{ tomcat_version }}"
+#  template: src=setenv.sh dest={{ xdat.app_src }}/bin/setenv.sh 
 
 - name: "Adjust XNAT deployment permissions"
-  file: path={{ xdat.app_src }} group={{ tomcat }} owner={{ tomcat }} recurse=yes
+  file: path={{ xnat_home_root }} group={{ tomcat }} owner={{ tomcat }} recurse=yes
 
 #- name: "Fill XNAT postgresql database with generated .sql from setup.sh"
 #  command: su "{{ tomcat }}" -c "psql -f {{ xdat.app_src }}/deployments/{{ xdat.project_name }}/sql/{{ xdat.project_name }}.sql -U {{ dbuser }} {{ dbname }}"
@@ -50,6 +49,6 @@
 #      - "{{ xdat.app_src }}/bin/StoreXML -project {{ xdat.project_name }} -l security/security.xml -allowDataDeletion true"
 #      - "{{ xdat.app_src }}/bin/StoreXML -dir ./work/field_groups -u admin -p admin -allowDataDeletion true"
 
-- name: "Adjust XNAT/tomcat permissions post-deployment and start tomcat"
-  file: path={{ xdat.maven_appserver_home }} group={{ tomcat }} owner={{ tomcat }} state=directory recurse=yes
-  notify: restart tomcat
+#- name: "Adjust XNAT/tomcat permissions post-deployment and start tomcat"
+#  file: path={{ xdat.maven_appserver_home }} group={{ tomcat }} owner={{ tomcat }} state=directory recurse=yes
+#  notify: restart tomcat

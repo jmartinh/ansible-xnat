@@ -35,24 +35,24 @@ smtp:
     auth_name:
     auth_passwd:
 
-# XNAT variables (mainly those in build.properties)
-xnat:
-    home_root: /data/xnat
-    archive_location: "{{ home_root }}/archive"
-    build_location: "{{ xnat.home_root }}/build"
-    prearchive_location: "{{ xnat.home_root }}/prearchive"
-    cache_location: "{{ xnat.home_root }}/cache"
-    ftp_location: "{{ xnat.home_root }}/ftp"
-    tmp_location: "{{ xnat.home_root }}/tmp"
-    pipeline_location: "{{ xnat.home_root }}/pipeline" # XXX: requires special handling
-    project_name: xnat
-    version: 1.7
-    tarball: xnat-web-"{{ xnat.version }}"-SNAPSHOT.war
+# XNAT variables
+xnat_home_root: /data/xnat
+xnat_project_name: xnat
+xnat_version: 1.7.1
+xnat_tarball: xnat-web-{{ xnat_version }}-SNAPSHOT.war
+xnat_archive_location: "{{ xnat_home_root }}/archive"
+xnat_build_location: "{{ xnat_home_root }}/build"
+xnat_prearchive_location: "{{ xnat_home_root }}/prearchive"
+xnat_cache_location: "{{ xnat_home_root }}/cache"
+xnat_ftp_location: "{{ xnat_home_root }}/ftp"
+xnat_tmp_location: "{{ xnat_home_root }}/tmp"
+xnat_pipeline_location: "{{ xnat_home_root }}/pipeline" # XXX: requires special handling
 
-    app_src: /usr/local/xnat
-    maven_appserver_home: /var/lib/tomcat{{ tomcat_version }}
-    main_url: http://localhost:8080/xnat
-    require_login: true
-    enable_new_registrations: true
-    security_channel: any  # Production servers should always use https_ Options: http, https, any
-    enable_csrf_token: true
+
+    #app_src: /usr/local/xnat
+    #maven_appserver_home: /var/lib/tomcat{{ tomcat_version }}
+    #main_url: http://localhost:8080/xnat
+    #require_login: true
+    #enable_new_registrations: true
+    #security_channel: any  # Production servers should always use https_ Options: http, https, any
+    #enable_csrf_token: true
