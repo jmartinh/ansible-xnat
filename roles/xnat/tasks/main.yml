@@ -54,12 +54,20 @@
       - home/plugin
       - home/work
 
-
-#- name: "Copy setenv.sh with JAVA_HOME for tomcat{{ tomcat_version }}"
-#  template: src=setenv.sh dest={{ xdat.app_src }}/bin/setenv.sh 
-
 - name: "Adjust XNAT deployment permissions"
-  file: path={{ xnat_home_root }} group={{ tomcat }} owner={{ tomcat }} recurse=yes
+  file: path={{ xnat_root }} group={{ tomcat }} owner={{ tomcat }} recurse=yes
+
+- name: "Make sure the dependencies are installed"
+  apt:
+    pkg: "{{item}}"
+    state: present
+  with_items: ["python-psycopg2", "python-pycurl"]
+
+- name: "Create XNAT PostgreSQL user"
+  postgresql_user: name=xnat password=xnat
+
+- name: "Create XNAT PostgreSQL db"
+  postgresql_db: name=xnat owner=xnat
 
 #- name: "Fill XNAT postgresql database with generated .sql from setup.sh"
 #  command: su "{{ tomcat }}" -c "psql -f {{ xdat.app_src }}/deployments/{{ xdat.project_name }}/sql/{{ xdat.project_name }}.sql -U {{ dbuser }} {{ dbname }}"
