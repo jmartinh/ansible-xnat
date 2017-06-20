@@ -12,10 +12,17 @@
 #    tmp_dest=/tmp
 
 #use for local targets e.g. vagrant boxes
-- name: "Copy over local {{ xnat_tarball }} to target Tomcat webapps folder"
+- name: "Copy over local {{ xnat_tarball }} to target Tomcat webapps folder (Debian.)"
   copy:
     src=~/Downloads/{{ xnat_tarball }}
     dest=/var/lib/tomcat{{ tomcat_version }}/webapps/ROOT.war
+  when: ansible_os_family == 'Debian'
+
+- name: "Copy over local {{ xnat_tarball }} to target Tomcat webapps folder (RedHat.)"
+  copy:
+    src=~/Downloads/{{ xnat_tarball }}
+    dest=/usr/share/tomcat{{ tomcat_version }}/webapps/ROOT.war
+  when: ansible_os_family == 'RedHat'
 
 - name: "Add system user {{ tomcat }}"
   user: name={{ tomcat }} shell=/bin/bash # XXX: restrict shell?
