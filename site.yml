@@ -1,9 +1,10 @@
 ---
 - hosts: all
   sudo: yes
-  gather_facts: true # roles use ansible_os_family
+  gather_facts: false # roles use ansible_os_family
   vars_files:
     - vars/main.yml  
+
   roles:
     - { role: java }
     - { role: tomcat }

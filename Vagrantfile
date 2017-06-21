@@ -19,7 +19,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ansible.playbook = "site.yml"
 #	ansible.verbose = 'vvvv'
 #    ansible.inventory_path = '.vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory'
-    ansible.extra_vars = { ansible_ssh_user: 'ubuntu', ansible_python_interpreter: '/usr/bin/python3' }
+    ansible.extra_vars = { ansible_ssh_user: 'ubuntu', ansible_python_interpreter: '/usr/bin/python2.7' }
     ansible.verbose = 'v'
   end
 
