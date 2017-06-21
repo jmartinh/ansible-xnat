@@ -24,8 +24,8 @@
     dest=/usr/share/tomcat{{ tomcat_version }}/webapps/ROOT.war
   when: ansible_os_family == 'RedHat'
 
-- name: "Add system user {{ tomcat }}"
-  user: name={{ tomcat }} shell=/bin/bash # XXX: restrict shell?
+- name: "Add system user {{ tomcat.user }}"
+  user: name={{ tomcat.user }} shell=/bin/bash # XXX: restrict shell?
 
 # unreliable
 #- name: "Download XNAT directly from GitHub"
@@ -39,8 +39,8 @@
   template: src=tomcat.j2 dest=/etc/default/tomcat{{ tomcat_version }}
   when: ansible_os_family == 'Debian'
 
-- name: "Setup XNAT data directories structure (LFH compliant)"
-  file: path="{{ xnat_root }}/{{ item }}" group={{ tomcat }} owner={{ tomcat }} state=directory
+- name: "Setup XNAT data directories"
+  file: path="{{ xnat_root }}/{{ item }}" group={{ tomcat.group }} owner={{ tomcat.user }} state=directory
   with_items:
       - build
       - archive
@@ -55,13 +55,7 @@
       - home/work
 
 - name: "Adjust XNAT deployment permissions"
-  file: path={{ xnat_root }} group={{ tomcat }} owner={{ tomcat }} recurse=yes
-
-- name: "Make sure the dependencies are installed"
-  apt:
-    pkg: "{{item}}"
-    state: present
-  with_items: ["python-psycopg2", "python-pycurl"]
+  file: path={{ xnat_root }} group={{ tomcat.group }} owner={{ tomcat.user }} recurse=yes
 
 - name: "Create XNAT PostgreSQL user"
   postgresql_user: name=xnat password=xnat

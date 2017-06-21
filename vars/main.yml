@@ -3,6 +3,13 @@
 ## file aims to capture sensible defaults for experienced XNAT
 ## admins, providing a quickstart deployment.
 
+#needs to be set manually (gather_facts in site.yml = false) along installing Python2.7 with the 'raw' module (first task in Java role) 
+#as long as Ansible does not fully support Python3 and >=Ubuntu16.04 ships with Python3 installed only
+ansible_distribution: Ubuntu
+ansible_os_family: Debian
+ansible_distribution_version: 16.04
+ansible_distribution_release: xenial
+
 ## General settings
 # Database connection and tomcat user/group
 dbname: xnat
@@ -10,10 +17,16 @@ dbuser: xnat
 dbpasswd: xnat
 
 # Ensure tomcat is not enabled during database/StoreXML operations
-tomcat_enabled: false
+tomcat_enabled: true
 tomcat_version: 7
-tomcat: tomcat{{ tomcat_version }}
 postgresql_standard_conforming_strings: off # As advised by docs XXX: needed?
+tomcat:
+    user: tomcat
+    group: tomcat
+    hostname: localhost
+    server_port: 8005
+    catalina_port: 8983
+    catalina_redirect_port: 8443
 
 # Java JVM settings
 java_home: /usr/lib/jvm/java-7-oracle/
@@ -41,20 +54,3 @@ xnat_home: "{{ xnat_root }}/home"
 xnat_project_name: xnat
 xnat_version: 1.7.1
 xnat_tarball: xnat-web-{{ xnat_version }}-SNAPSHOT.war
-
-#xnat_archive_location: "{{ xnat_root }}/archive"
-#xnat_build_location: "{{ xnat_root }}/build"
-#xnat_prearchive_location: "{{ xnat_root }}/prearchive"
-#xnat_cache_location: "{{ xnat_root }}/cache"
-#xnat_ftp_location: "{{ xnat_root }}/ftp"
-#xnat_tmp_location: "{{ xnat_root }}/tmp"
-#xnat_pipeline_location: "{{ xnat_root }}/pipeline" # XXX: requires special handling
-
-
-    #app_src: /usr/local/xnat
-    #maven_appserver_home: /var/lib/tomcat{{ tomcat_version }}
-    #main_url: http://localhost:8080/xnat
-    #require_login: true
-    #enable_new_registrations: true
-    #security_channel: any  # Production servers should always use https_ Options: http, https, any
-    #enable_csrf_token: true
