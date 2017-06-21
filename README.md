@@ -16,10 +16,13 @@ If you use [VirtualBox](https://www.virtualbox.org/wiki/Downloads) and [Vagrant]
 
 	vagrant up
 
-If you want to deploy on bare metal:
+If you want to deploy on bare metal
 
     ansible-playbook site.yml 192.168.0.1,
 
+After the playbook finishes, access under
+	
+	http://localhost:8080
 
 License
 -------
@@ -30,4 +33,5 @@ Author Information
 ------------------
 
 Roman Valls Guimera
+
 Gregor Lenz
