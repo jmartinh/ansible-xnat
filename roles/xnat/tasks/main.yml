@@ -5,22 +5,22 @@
 #use for remote targets
 #- name: "Download XNAT-{{ xnat_version }} snapshot .war directly to Tomcat webapps folder"
 #  get_url: 
-#    url=https://bitbucket.org/xnatdev/xnat-web/downloads/{{ xnat_tarball }} 
+#    url=https://bitbucket.org/xnatdev/xnat-web/downloads/{{ xnat.tarball }} 
 #    dest=/var/lib/tomcat{{ tomcat_version }}/webapps/ROOT.war
 #    force=no 
 #    timeout=30
 #    tmp_dest=/tmp
 
 #use for local targets e.g. vagrant boxes
-- name: "Copy over local {{ xnat_tarball }} to target Tomcat webapps folder (Debian.)"
+- name: "Copy over local {{ xnat.tarball }} to target Tomcat webapps folder (Debian.)"
   copy:
-    src=~/Downloads/{{ xnat_tarball }}
+    src=~/Downloads/{{ xnat.tarball }}
     dest=/var/lib/tomcat{{ tomcat_version }}/webapps/ROOT.war
   when: ansible_os_family == 'Debian'
 
-- name: "Copy over local {{ xnat_tarball }} to target Tomcat webapps folder (RedHat.)"
+- name: "Copy over local {{ xnat.tarball }} to target Tomcat webapps folder (RedHat.)"
   copy:
-    src=~/Downloads/{{ xnat_tarball }}
+    src=~/Downloads/{{ xnat.tarball }}
     dest=/usr/share/tomcat{{ tomcat_version }}/webapps/ROOT.war
   when: ansible_os_family == 'RedHat'
 
@@ -29,15 +29,11 @@
 
 # unreliable
 #- name: "Download XNAT directly from GitHub"
-#  get_url: url=http://github.com/boxerab/xnat/archive/master.tar.gz dest=/tmp/{{ xnat_tarball }} force=no
+#  get_url: url=http://github.com/boxerab/xnat/archive/master.tar.gz dest=/tmp/{{ xnat.tarball }} force=no
 
 # only needed for github download
 #- name: "Symlink for Github xnat-master"
 #  file: src={{ xdat.app_src }}-master dest={{ xdat.app_src }} owner={{ tomcat }} group={{ tomcat }} state=link
-
-- name: "Copy default tomcat{{ tomcat_version }} debian file. Username change, as advised by XNAT docs"
-  template: src=tomcat.j2 dest=/etc/default/tomcat{{ tomcat_version }}
-  when: ansible_os_family == 'Debian'
 
 - name: "Setup XNAT data directories"
   file: path="{{ xnat_root }}/{{ item }}" group={{ tomcat.group }} owner={{ tomcat.user }} state=directory
@@ -54,24 +50,15 @@
       - home/plugin
       - home/work
 
+- name: "Copy xnat-config.properties"
+  template: src=xnat-config.properties.j2 dest={{ xnat_home }}/config owner={{ tomcat.user }} group={{ tomcat.group }} mode=0644 force=yes
+
 - name: "Adjust XNAT deployment permissions"
   file: path={{ xnat_root }} group={{ tomcat.group }} owner={{ tomcat.user }} recurse=yes
 
 - name: "Create XNAT PostgreSQL user"
-  postgresql_user: name=xnat password=xnat
+  postgresql_user: name={{ xnat.pg_user }} password={{ xnat.pg_password }}
 
 - name: "Create XNAT PostgreSQL db"
-  postgresql_db: name=xnat owner=xnat
-
-#- name: "Fill XNAT postgresql database with generated .sql from setup.sh"
-#  command: su "{{ tomcat }}" -c "psql -f {{ xdat.app_src }}/deployments/{{ xdat.project_name }}/sql/{{ xdat.project_name }}.sql -U {{ dbuser }} {{ dbname }}"
-
-#- name: "Adjust default XNAT security settings"
-#  shell: chdir={{ xdat.app_src }}/deployments/{{ xdat.project_name }} . {{ xdat.app_src }}/bin/setenv.sh {{ item }}
-#  with_items:
-#      - "{{ xdat.app_src }}/bin/StoreXML -project {{ xdat.project_name }} -l security/security.xml -allowDataDeletion true"
-#      - "{{ xdat.app_src }}/bin/StoreXML -dir ./work/field_groups -u admin -p admin -allowDataDeletion true"
-
-#- name: "Adjust XNAT/tomcat permissions post-deployment and start tomcat"
-#  file: path={{ xdat.maven_appserver_home }} group={{ tomcat }} owner={{ tomcat }} state=directory recurse=yes
-#  notify: restart tomcat
+  postgresql_db: name={{ xnat.pg_database }} owner={{ xnat.pg_user }}
+  notify: restart tomcat

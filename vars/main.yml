@@ -10,19 +10,13 @@ ansible_os_family: Debian
 ansible_distribution_version: 16.04
 ansible_distribution_release: xenial
 
-## General settings
-# Database connection and tomcat user/group
-dbname: xnat
-dbuser: xnat
-dbpasswd: xnat
-
 # Ensure tomcat is not enabled during database/StoreXML operations
 tomcat_enabled: true
 tomcat_version: 7
 postgresql_standard_conforming_strings: off # As advised by docs XXX: needed?
 tomcat:
-    user: tomcat
-    group: tomcat
+    user: "tomcat{{ tomcat_version }}"
+    group: "tomcat{{ tomcat_version }}"
     hostname: localhost
     server_port: 8005
     catalina_port: 8983
@@ -49,8 +43,13 @@ smtp:
     auth_passwd:
 
 # XNAT variables
+xnat_version: 1.7.1
 xnat_root: /data/xnat
 xnat_home: "{{ xnat_root }}/home"
-xnat_project_name: xnat
-xnat_version: 1.7.1
-xnat_tarball: xnat-web-{{ xnat_version }}-SNAPSHOT.war
+
+xnat:
+    project_name: xnat
+    tarball: xnat-web-{{ xnat_version }}-SNAPSHOT.war
+    pg_database: xnat
+    pg_user: xnat
+    pg_password: xnat
