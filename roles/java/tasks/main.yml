@@ -1,6 +1,13 @@
 ---
+#TODO move to separate setup role
 - name: Install python2
   raw: apt-get install -y python2.7
+
+- name: Ensure a locale exists.
+  locale_gen:
+    name: en_GB.UTF-8
+    state: present
+
 
 - name: Include OS-specific variables.
   include_vars: "{{ ansible_os_family }}.yml"

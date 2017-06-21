@@ -14,7 +14,7 @@
 - name: Copy tomcat{{ tomcat_version }} config file.
   template: src=tomcat{{ tomcat_version }}.j2 dest=/etc/default/tomcat{{ tomcat_version }} owner=root group=root mode=0644 force=yes
   notify: restart tomcat
-  when: tomcat_enabled
+  when: tomcat_enabled and ansible_os_family == 'Debian'
 
 - name: Ensure tomcat{{ tomcat_version }} is running.
   service: name=tomcat{{ tomcat_version }} state=started enabled=yes
