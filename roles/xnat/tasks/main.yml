@@ -25,15 +25,7 @@
   when: ansible_os_family == 'RedHat'
 
 - name: "Add system user {{ tomcat.user }}"
-  user: name={{ tomcat.user }} shell=/bin/bash # XXX: restrict shell?
-
-# unreliable
-#- name: "Download XNAT directly from GitHub"
-#  get_url: url=http://github.com/boxerab/xnat/archive/master.tar.gz dest=/tmp/{{ xnat.tarball }} force=no
-
-# only needed for github download
-#- name: "Symlink for Github xnat-master"
-#  file: src={{ xdat.app_src }}-master dest={{ xdat.app_src }} owner={{ tomcat }} group={{ tomcat }} state=link
+  user: name={{ tomcat.user }} shell=/bin/bash 
 
 - name: "Setup XNAT data directories"
   file: path="{{ xnat_root }}/{{ item }}" group={{ tomcat.group }} owner={{ tomcat.user }} state=directory
@@ -51,9 +43,9 @@
       - home/work
 
 - name: "Copy xnat-config.properties"
-  template: src=xnat-config.properties.j2 dest={{ xnat_home }}/config owner={{ tomcat.user }} group={{ tomcat.group }} mode=0644 force=yes
+  template: src=xnat-conf.properties.j2 dest={{ xnat_home }}/config/xnat-conf.properties owner={{ tomcat.user }} group={{ tomcat.group }} mode=0644 force=yes
 
-- name: "Adjust XNAT deployment permissions"
+- name: "Check XNAT directory permissions"
   file: path={{ xnat_root }} group={{ tomcat.group }} owner={{ tomcat.user }} recurse=yes
 
 - name: "Create XNAT PostgreSQL user"
