@@ -1,8 +1,2 @@
 ---
-tomcat_version: 7
-tomcat_enabled: true
-tomcat:
-    hostname: localhost
-    server_port: 8005
-    catalina_port: 8983
-    catalina_redirect_port: 8443
+

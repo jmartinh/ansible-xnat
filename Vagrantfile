@@ -10,8 +10,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # please see the online documentation at vagrantup.com.
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box_url = "https://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box"
-  config.vm.box = "base"
+  config.vm.box = "ubuntu/xenial64"
+#config.vm.box = "base"
 
   # Default to localhost, otherwise 3(NXDOMAIN)
   config.vm.hostname = "localhost"
@@ -19,7 +19,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ansible.playbook = "site.yml"
 #	ansible.verbose = 'vvvv'
 #    ansible.inventory_path = '.vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory'
-    ansible.extra_vars = { ansible_ssh_user: 'vagrant' }
+    ansible.extra_vars = { ansible_ssh_user: 'ubuntu', ansible_python_interpreter: '/usr/bin/python2.7' }
+    ansible.verbose = 'v'
   end
 
   # Disable automatic box update checking. If you disable this, then

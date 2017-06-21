@@ -3,27 +3,33 @@
 ## file aims to capture sensible defaults for experienced XNAT
 ## admins, providing a quickstart deployment.
 
-## General settings
-# Database connection and tomcat user/group
-dbname: xnat
-dbuser: xnat
-dbpasswd: xnat
+#needs to be set manually (gather_facts in site.yml = false) along installing Python2.7 with the 'raw' module (first task in Java role) 
+#as long as Ansible does not fully support Python3 and >=Ubuntu16.04 ships with Python3 installed only
+ansible_distribution: Ubuntu
+ansible_os_family: Debian
+ansible_distribution_version: 16.04
+ansible_distribution_release: xenial
 
 # Ensure tomcat is not enabled during database/StoreXML operations
-tomcat_enabled: false
+tomcat_enabled: true
 tomcat_version: 7
-tomcat: tomcat{{ tomcat_version }}
 postgresql_standard_conforming_strings: off # As advised by docs XXX: needed?
+tomcat:
+    user: "tomcat{{ tomcat_version }}"
+    group: "tomcat{{ tomcat_version }}"
+    hostname: localhost
+    server_port: 8005
+    catalina_port: 8983
+    catalina_redirect_port: 8443
 
 # Java JVM settings
 java_home: /usr/lib/jvm/java-7-oracle/
 java_packages:
-  - oracle-java7-installer
+  - openjdk-8-jdk
 
 java_mem:
     Xms: 512
     Xmx: 1024
-
 
 ## XNAT settings
 # Email server for XNAT
@@ -36,20 +42,14 @@ smtp:
     auth_name:
     auth_passwd:
 
-# XNAT variables (mainly those in build.properties)
-xdat:
+# XNAT variables
+xnat_version: 1.7.1
+xnat_root: /data/xnat
+xnat_home: "{{ xnat_root }}/home"
+
+xnat:
     project_name: xnat
-    app_src: /usr/local/xnat
-    maven_appserver_home: /var/lib/tomcat{{ tomcat_version }}
-    archive_location: /srv/xnat/archive
-    prearchive_location: /srv/xnat/prearchive
-    cache_location: /srv/xnat/cache
-    ftp_location: /srv/xnat/ftp
-    build_location: /srv/xnat/tmp
-#    pipeline_location: /srv/xnat/pipelines # XXX: requires special handling
-    modules_location: /srv/xnat/modules
-    main_url: http://localhost:8080/xnat
-    require_login: true
-    enable_new_registrations: true
-    security_channel: any  # Production servers should always use https_ Options: http, https, any
-    enable_csrf_token: true
+    tarball: xnat-web-{{ xnat_version }}-SNAPSHOT.war
+    pg_database: xnat
+    pg_user: xnat
+    pg_password: xnat
