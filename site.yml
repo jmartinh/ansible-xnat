@@ -6,6 +6,7 @@
     - vars/main.yml  
 
   roles:
+    - { role: setup }
     - { role: java }
     - { role: tomcat }
     - { role: postgresql }
