@@ -11,7 +11,7 @@ tomcat:
     catalina_redirect_port: 8443
 
 # Java JVM settings
-java_home: /usr/lib/jvm/java-7-oracle/
+java_home: /usr/lib/jvm/java-1.8.0-openjdk-amd64/
 java_packages:
   - openjdk-8-jdk
 
