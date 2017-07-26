@@ -1,9 +1,11 @@
 ---
 - hosts: all
   sudo: yes
-  gather_facts: false # roles use ansible_os_family
+  gather_facts: false # roles use ansible_os_family env vars
   vars_files:
-    - vars/main.yml  
+    - group_vars/vars.yml
+#    - group_vars/vault.yml
+#    - vars/main.yml  
 
   roles:
     - { role: setup }
