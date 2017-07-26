@@ -43,7 +43,7 @@ xnat:
     pg_user: xnat
     pg_password: xnat
 
-plugins_release_tag: 1.3
+plugins_release_tag: 1.3.1
 # removed Ansible vault file because cannot store password in public repo or wiki. And staff's memory is too weak
 #github_token: {{ vault_github_token }}
 
