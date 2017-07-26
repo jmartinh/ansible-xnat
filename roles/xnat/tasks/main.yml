@@ -55,18 +55,24 @@
 - name: "Create XNAT PostgreSQL db"
   postgresql_db: name={{ xnat.pg_database }} owner={{ xnat.pg_user }}
 
-- name: "Fetch latest Github release tag"
-  github_release:
-    token: "a19de90e2fb37e20f91609603dde1be876011c98"
-    user: "BioMedIA"
-    repo: "xnat-plugins"
-    action: "latest_release"
-  register: result
+#- name: Install pip
+#  package: name=python-pip state=latest use=apt
+
+#- name: "Install github3 pip package"
+#  pip: name=github3.py version=1.0.0a4 state=present
+
+#- name: "Fetch latest Github release tag"
+#  github_release:
+#    token: "{{ vault_github_token }}"
+#    user: "BioMedIA"
+#    repo: "xnat-plugins"
+#    action: "latest_release"
+#  register: result
 
 - name: "Download plugins from latest release"
   get_url:
-    dest: "{{ xnat_root }}/home/plugins"
-    url: "https://github.com/BioMedIA/xnat-plugins/releases/tag/{{ result.tag }}/{{ item }}-plugin-{{ result.tag}}.jar"
+    dest: "{{ xnat_root }}/home/plugins/"
+    url: "https://github.com/BioMedIA/xnat-plugins/releases/download/{{ plugins_release_tag }}/{{ item }}-plugin-{{ plugins_release_tag }}.jar"
   with_items:
         - DownloadWholeProject
         - Frontend
