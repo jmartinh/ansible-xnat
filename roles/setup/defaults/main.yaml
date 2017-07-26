@@ -1,0 +1,7 @@
+---
+#needs to be set manually (gather_facts in site.yml = false) along installing Python2.7 with the 'raw' module (first task in Java role) 
+#as long as Ansible does not fully support Python3 and >=Ubuntu16.04 ships with Python3 installed only
+ansible_distribution: Ubuntu
+ansible_os_family: Debian
+ansible_distribution_version: 16.04
+ansible_distribution_release: xenial

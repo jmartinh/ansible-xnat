@@ -39,8 +39,9 @@
       - home 
       - home/config
       - home/logs
-      - home/plugin
+      - home/plugins
       - home/work
+      - home/downloads
 
 - name: "Copy xnat-config.properties"
   template: src=xnat-conf.properties.j2 dest={{ xnat_home }}/config/xnat-conf.properties owner={{ tomcat.user }} group={{ tomcat.group }} mode=0644 force=yes
@@ -53,4 +54,27 @@
 
 - name: "Create XNAT PostgreSQL db"
   postgresql_db: name={{ xnat.pg_database }} owner={{ xnat.pg_user }}
+
+#- name: Install pip
+#  package: name=python-pip state=latest use=apt
+
+#- name: "Install github3 pip package"
+#  pip: name=github3.py version=1.0.0a4 state=present
+
+#- name: "Fetch latest Github release tag"
+#  github_release:
+#    token: "{{ vault_github_token }}"
+#    user: "BioMedIA"
+#    repo: "xnat-plugins"
+#    action: "latest_release"
+#  register: result
+
+- name: "Download plugins from latest release"
+  get_url:
+    dest: "{{ xnat_root }}/home/plugins/"
+    url: "https://github.com/BioMedIA/xnat-plugins/releases/download/{{ plugins_release_tag }}/{{ item }}-plugin-{{ plugins_release_tag }}.jar"
+  with_items:
+        - DownloadWholeProject
+        - Frontend
+        - UserAttributes
   notify: restart tomcat
