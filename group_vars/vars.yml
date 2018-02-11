@@ -35,10 +35,11 @@ smtp:
 xnat_version: 1.7.1
 xnat_root: /data/xnat
 xnat_home: "{{ xnat_root }}/home"
+xnat_local_war: "{{ playbook_dir }}/{{ xnat.tarball }}"
 
 xnat:
     project_name: xnat
-    tarball: xnat-web-{{ xnat_version }}-SNAPSHOT.war
+    tarball: xnat-web-{{ xnat_version }}.war
     pg_database: xnat
     pg_user: xnat
     pg_password: xnat
