@@ -14,13 +14,13 @@
 #use for local targets e.g. vagrant boxes
 - name: "Copy over local {{ xnat.tarball }} to target Tomcat webapps folder (Debian.)"
   copy:
-    src=~/Downloads/{{ xnat.tarball }}
+    src={{ xnat_local_war }}
     dest=/var/lib/tomcat{{ tomcat_version }}/webapps/ROOT.war
   when: ansible_os_family == 'Debian'
 
 - name: "Copy over local {{ xnat.tarball }} to target Tomcat webapps folder (RedHat.)"
   copy:
-    src=~/Downloads/{{ xnat.tarball }}
+    src={{ xnat_local_war }}
     dest=/usr/share/tomcat{{ tomcat_version }}/webapps/ROOT.war
   when: ansible_os_family == 'RedHat'
 

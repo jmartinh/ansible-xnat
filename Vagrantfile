@@ -17,9 +17,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.hostname = "localhost"
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "site.yml"
+    ansible.limit = 'all'
 #    ansible.inventory_path = '.vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory'
-    ansible.extra_vars = { ansible_ssh_user: 'ubuntu', ansible_python_interpreter: '/usr/bin/python2.7', plugins_release_tag: '1.3' }
-#    ansible.verbose = 'vv'
+    ansible.extra_vars = { ansible_ssh_user: 'vagrant', ansible_python_interpreter: '/usr/bin/python2.7', plugins_release_tag: '1.3' }
+    ansible.raw_arguments  = [
+      "--private-key=.vagrant/machines/default/virtualbox/private_key"
+    ]
+
+    ansible.verbose = 'vv'
 #    ansible.ask_vault_pass = true   ##not using Ansible Vault for the time being
 #    ansible.vault_password_file = "~/ansible.password"  ##not using Ansible Vault for the time being
   end
