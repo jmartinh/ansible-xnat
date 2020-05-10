@@ -1,6 +1,7 @@
 ---
-- hosts: all
-  sudo: yes
+- hosts: localhost
+  connection: local
+  become: true
   gather_facts: false # roles use ansible_os_family env vars
   vars_files:
     - group_vars/vars.yml

@@ -7,9 +7,28 @@
   - "tomcat{{ tomcat_version }}-admin-webapps"
   when: ansible_os_family == 'RedHat'
 
-- name: Ensure tomcat{{ tomcat_version }} is installed (Debian).
-  apt: name=tomcat{{ tomcat_version }} state=installed update_cache=yes
+
+- name: Add Tomcat7 ubuntu repo main
+  apt_repository:
+    repo: deb http://security.ubuntu.com/ubuntu trusty-security main universe
+    state: present
   when: ansible_os_family == 'Debian'
+
+#- name: Add Tomcat7 unbuntu repo universe
+#  apt_repository:
+#    repo: deb http://archive.canonical.com/ubuntu xenial universe
+#    state: present
+#  when: ansible_os_family == 'Debian'
+
+- name: Ensure tomcat{{ tomcat_version }} is installed (Debian).
+  apt: name=tomcat{{ tomcat_version }} state=present update_cache=yes
+  when: ansible_os_family == 'Debian'
+
+- name: Inserting a line after to extend JDK_DIRS
+  lineinfile:
+    path: /etc/init.d/tomcat{{ tomcat_version }}
+    line: JDK_DIRS="${JDK_DIRS} /usr/lib/jvm/java-8-openjdk-amd64"
+    insertafter: JDK_DIRS="/usr/lib/jvm/default-java.*
 
 - name: Copy tomcat{{ tomcat_version }} config file.
   template: src=tomcat{{ tomcat_version }}.j2 dest=/etc/default/tomcat{{ tomcat_version }} owner=root group=root mode=0644 force=yes

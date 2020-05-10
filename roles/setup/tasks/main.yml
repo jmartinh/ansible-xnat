@@ -1,6 +1,7 @@
 ---
-- name: Install python2
-  raw: apt-get install -y python2.7
+#- name: Install python3
+#  become: true
+#  raw: apt-get install -y python3
 
 #- name: Install pip
 #  raw: apt-get install -y python-pip 

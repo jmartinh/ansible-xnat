@@ -69,12 +69,12 @@
 #    action: "latest_release"
 #  register: result
 
-- name: "Download plugins from latest release"
-  get_url:
-    dest: "{{ xnat_root }}/home/plugins/"
-    url: "https://github.com/BioMedIA/xnat-plugins/releases/download/{{ plugins_release_tag }}/{{ item }}-plugin-{{ plugins_release_tag }}.jar"
-  with_items:
-        - DownloadWholeProject
-        - Frontend
-        - UserAttributes
-  notify: restart tomcat
+#- name: "Download plugins from latest release"
+#  get_url:
+#    dest: "{{ xnat_root }}/home/plugins/"
+#    url: "https://github.com/BioMedIA/xnat-plugins/releases/download/{{ plugins_release_tag }}/{{ item }}-plugin-{{ plugins_release_tag }}.jar"
+#  with_items:
+#        - DownloadWholeProject
+#        - Frontend
+#        - UserAttributes
+#  notify: restart tomcat

@@ -32,7 +32,7 @@ smtp:
     auth_passwd:
 
 # XNAT variables
-xnat_version: 1.7.4.1
+xnat_version: 1.7.6
 xnat_root: /data/xnat
 xnat_home: "{{ xnat_root }}/home"
 xnat_local_war: "{{ playbook_dir }}/{{ xnat.tarball }}"
